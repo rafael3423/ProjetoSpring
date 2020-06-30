@@ -22,6 +22,7 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     
     @org.springframework.web.bind.annotation.ExceptionHandler(NegocioException.class)
     public ResponseEntity<Object> handleNegocio(NegocioException ex, WebRequest request){
+        
         var status = HttpStatus.BAD_REQUEST;
         var erros = new Erros(ex.getMessage(),status.value(),OffsetDateTime.now(),null);
         
@@ -48,41 +49,4 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

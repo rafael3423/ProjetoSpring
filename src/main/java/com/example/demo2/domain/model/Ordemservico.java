@@ -10,8 +10,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,6 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -61,6 +63,10 @@ public class Ordemservico {
 
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataFinalizacao;
+    
+    
+    @OneToMany(mappedBy = "ordemservico")
+    private List<Comentario> comentarios = new ArrayList();
 
     public Ordemservico(Long id, Cliente cliente, String descricao, BigDecimal preco, StatusOrdemServico status, OffsetDateTime dataAbertura, OffsetDateTime dataFinalizacao) {
         this.id = id;
@@ -131,6 +137,16 @@ public class Ordemservico {
         this.dataFinalizacao = dataFinalizacao;
     }
 
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+    
+    
+
     @Override
     public int hashCode() {
         int hash = 5;
@@ -156,6 +172,9 @@ public class Ordemservico {
     }
 
 }
+
+
+
 
 
 
