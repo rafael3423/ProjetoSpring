@@ -11,11 +11,10 @@ import com.example.demo2.domain.model.Ordemservico;
 import com.example.demo2.domain.repository.OrdemServicoRepository;
 import com.example.demo2.domain.service.GestaoOrdemServico;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("ordens-servico")
+@CrossOrigin(origins = "*") // permite que qualquer dominio tenha acesso aos dados
+
 public class OrdemServicoController {
 
     @Autowired
@@ -49,19 +50,28 @@ public class OrdemServicoController {
     @GetMapping()
     public List<Ordemservico> listar() {
 
-        return ordemServicoRepository.findAll();
+       List<Ordemservico> os = ordemServicoRepository.findAll();
+       
+       os.forEach((oss)->{
+           oss.getComentarios().forEach((c)->{
+               c.setOrdemservico(null);
+           });
+       });
+       
+        return os;
     }
 
     @GetMapping("/{ordemservicoId}")
-    public ResponseEntity<Ordemservico> buscar(@PathVariable Long ordemservicoId) {
+    public Ordemservico buscar(@PathVariable Long ordemservicoId) {
 
-        Optional<Ordemservico> ordemServico = ordemServicoRepository.findById(ordemservicoId);
+        Ordemservico ordemServico = ordemServicoRepository.findById(ordemservicoId).orElseThrow(() -> new NegocioException("Ordem de servico não encontrada"));
+    
+        
+        ordemServico.getComentarios().forEach((os)->{
+            os.setOrdemservico(null);
+        });
 
-        if (!ordemServico.isEmpty()) {
-            return ResponseEntity.ok(ordemServico.get());
-        }
-
-        return ResponseEntity.notFound().build();
+        return ordemServico;
     }
 
     @PostMapping("/{ordemservicoId}/comentarios")
@@ -93,6 +103,16 @@ public class OrdemServicoController {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 

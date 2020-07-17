@@ -64,7 +64,7 @@ public class Ordemservico {
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataFinalizacao;
     
-    
+    @JsonInclude(JsonInclude.Include.NON_ABSENT)
     @OneToMany(mappedBy = "ordemservico")
     private List<Comentario> comentarios = new ArrayList();
 
@@ -172,6 +172,10 @@ public class Ordemservico {
     }
 
 }
+
+
+
+
 
 
 

@@ -35,7 +35,7 @@ public class GestaoOrdemServico {
 
     public Ordemservico criar(Ordemservico ordemServico) {
 
-        Cliente cliente = clienteRepository.findById(ordemServico.getCliente().getId()).orElseThrow(() -> new NegocioException("cliente não encontrado!."));
+        Cliente cliente = clienteRepository.findById(ordemServico.getCliente().getId()).orElseThrow(() -> new NegocioException("Cliente não encontrado!"));
 
         ordemServico.setCliente(cliente);
         ordemServico.setStatus(StatusOrdemServico.ABERTA);
@@ -71,4 +71,7 @@ public class GestaoOrdemServico {
     }
 
 }
+
+
+
 
