@@ -1,11 +1,15 @@
 package com.example.demo2.api.controller;
 
+import com.example.demo2.domain.dto.ClienteDTO;
+import com.example.demo2.domain.exception.NegocioException;
 import com.example.demo2.domain.model.Cliente;
 import com.example.demo2.domain.repository.ClienteRepository;
 import com.example.demo2.domain.service.CadastroCliente;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,51 +29,61 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*") // permite que qualquer dominio tenha acesso aos dados
 public class ClientController {
 
+    ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private ClienteRepository clienteRepository;
-    
+
     @Autowired
     private CadastroCliente cadastroCliente;
-    
+
     @GetMapping()
-    public List<Cliente> listar() {
-        return clienteRepository.findAll();
+    public List<ClienteDTO> listar() {
+
+        List<Cliente> clientes = clienteRepository.findAll();
+        List<ClienteDTO> clientesDTO = new ArrayList();
+
+        clientes.forEach((c) -> {
+            ClienteDTO clienteDTO = modelMapper.map(c, ClienteDTO.class);
+            clientesDTO.add(clienteDTO);
+        });
+
+        return clientesDTO;
     }
 
     @GetMapping("/{clienteId}")
-    public ResponseEntity<Cliente> buscar(@PathVariable Long clienteId) {
-        Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+    public ClienteDTO buscar(@PathVariable Long clienteId) {
 
-        if (!cliente.isEmpty()) {
-            return ResponseEntity.ok(cliente.get());
-        }
+        Cliente cliente = clienteRepository.findById(clienteId).orElseThrow(() -> new NegocioException("cliente não encontrado"));
 
-        return ResponseEntity.notFound().build();
+        ClienteDTO clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
+
+   
+        return clienteDTO;
+
     }
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente adicionar(@Valid @RequestBody Cliente cliente){
+    public ClienteDTO adicionar(@Valid @RequestBody Cliente cliente) {
 
+        
         return cadastroCliente.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
-    public ResponseEntity<Cliente> atualizar(@Valid @PathVariable Long clienteId, @RequestBody Cliente cliente) {
+    public ResponseEntity<ClienteDTO> atualizar(@Valid @PathVariable Long clienteId, @RequestBody Cliente cliente) {
 
         if (!clienteRepository.existsById(clienteId)) {
-            return ResponseEntity.notFound().build();
+            throw new NegocioException("cliente não encontrado");
         }
         cliente.setId(clienteId);
-        cliente = cadastroCliente.salvar(cliente);
-
-        return ResponseEntity.ok(cliente);
-
+        return ResponseEntity.ok(cadastroCliente.salvar(cliente));
     }
 
     @DeleteMapping("/{clienteId}")
     public ResponseEntity<Void> deletar(@PathVariable Long clienteId) {
-        
+
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
         }
@@ -80,20 +94,3 @@ public class ClientController {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

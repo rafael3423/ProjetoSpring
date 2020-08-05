@@ -5,13 +5,17 @@
  */
 package com.example.demo2.api.controller;
 
+import com.example.demo2.domain.dto.ComentarioDTO;
+import com.example.demo2.domain.dto.OrdemservicoDTO;
 import com.example.demo2.domain.exception.NegocioException;
 import com.example.demo2.domain.model.Comentario;
 import com.example.demo2.domain.model.Ordemservico;
 import com.example.demo2.domain.repository.OrdemServicoRepository;
 import com.example.demo2.domain.service.GestaoOrdemServico;
+import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -34,6 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class OrdemServicoController {
 
+    ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     private GestaoOrdemServico gestaoOrdemServico;
 
@@ -42,81 +48,55 @@ public class OrdemServicoController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Ordemservico criar(@Valid @RequestBody Ordemservico ordemServico) {
+    public OrdemservicoDTO criar(@Valid @RequestBody Ordemservico ordemServico) {
 
         return gestaoOrdemServico.criar(ordemServico);
     }
 
     @GetMapping()
-    public List<Ordemservico> listar() {
+    public List<OrdemservicoDTO> listar() {
 
-       List<Ordemservico> os = ordemServicoRepository.findAll();
-       
-       os.forEach((oss)->{
-           oss.getComentarios().forEach((c)->{
-               c.setOrdemservico(null);
-           });
-       });
-       
-        return os;
+        List<Ordemservico> ordemservicos = ordemServicoRepository.findAll();
+        List<OrdemservicoDTO> ordemservicosDTO = new ArrayList();
+
+        ordemservicos.forEach((os) -> {
+            OrdemservicoDTO ordemservicoDTO = modelMapper.map(os, OrdemservicoDTO.class);
+            ordemservicosDTO.add(ordemservicoDTO);
+        });
+
+        return ordemservicosDTO;
     }
 
     @GetMapping("/{ordemservicoId}")
-    public Ordemservico buscar(@PathVariable Long ordemservicoId) {
+    public OrdemservicoDTO buscar(@PathVariable Long ordemservicoId) {
 
         Ordemservico ordemServico = ordemServicoRepository.findById(ordemservicoId).orElseThrow(() -> new NegocioException("Ordem de servico não encontrada"));
-    
-        
-        ordemServico.getComentarios().forEach((os)->{
-            os.setOrdemservico(null);
-        });
 
-        return ordemServico;
+        return modelMapper.map(ordemServico, OrdemservicoDTO.class);
     }
 
     @PostMapping("/{ordemservicoId}/comentarios")
     @ResponseStatus(HttpStatus.CREATED)
-    public Comentario comentar(@PathVariable Long ordemservicoId, @Valid @RequestBody Comentario comentarioInput) {
+    public ComentarioDTO comentar(@PathVariable Long ordemservicoId, @Valid @RequestBody Comentario comentarioInput) {
 
-        Comentario comentario = gestaoOrdemServico.adicionarComentario(ordemservicoId, comentarioInput.getDescricao());
-
-        return comentario;
+        return gestaoOrdemServico.adicionarComentario(ordemservicoId, comentarioInput.getDescricao());
     }
-    
+
     @GetMapping("/{ordemservicoId}/comentarios")
-    public List<Comentario> listarComentarios(@PathVariable Long ordemservicoId){
-        Ordemservico ordemservico = ordemServicoRepository.findById(ordemservicoId)
-                .orElseThrow(()-> new NegocioException("Ordem de servico não existe."));
+    public List<Comentario> listarComentarios(@PathVariable Long ordemservicoId) {
+        Ordemservico ordemServico = ordemServicoRepository.findById(ordemservicoId)
+                .orElseThrow(() -> new NegocioException("Ordem de servico não existe."));
+
         
-        ordemservico.getComentarios().forEach((os)->{
-            os.setOrdemservico(null);
-        });
-        
-        return ordemservico.getComentarios() ;
+
+        return modelMapper.map(ordemServico.getComentarios(), OrdemservicoDTO.class);
     }
-    
+
     @PutMapping("/{ordemservicoId}/finalizar")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-       public void comentar(@PathVariable Long ordemservicoId) {
+    public void comentar(@PathVariable Long ordemservicoId) {
 
         gestaoOrdemServico.finalizar(ordemservicoId);
 
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

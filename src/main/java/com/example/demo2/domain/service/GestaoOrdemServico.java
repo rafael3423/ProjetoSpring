@@ -5,6 +5,8 @@
  */
 package com.example.demo2.domain.service;
 
+import com.example.demo2.domain.dto.ComentarioDTO;
+import com.example.demo2.domain.dto.OrdemservicoDTO;
 import com.example.demo2.domain.exception.NegocioException;
 import com.example.demo2.domain.model.Cliente;
 import com.example.demo2.domain.model.Comentario;
@@ -14,6 +16,7 @@ import com.example.demo2.domain.repository.ClienteRepository;
 import com.example.demo2.domain.repository.ComentarioRepository;
 import com.example.demo2.domain.repository.OrdemServicoRepository;
 import java.time.OffsetDateTime;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GestaoOrdemServico {
 
+    ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     OrdemServicoRepository ordemServicoRepository;
 
@@ -33,7 +38,7 @@ public class GestaoOrdemServico {
     @Autowired
     ClienteRepository clienteRepository;
 
-    public Ordemservico criar(Ordemservico ordemServico) {
+    public OrdemservicoDTO criar(Ordemservico ordemServico) {
 
         Cliente cliente = clienteRepository.findById(ordemServico.getCliente().getId()).orElseThrow(() -> new NegocioException("Cliente não encontrado!"));
 
@@ -41,37 +46,31 @@ public class GestaoOrdemServico {
         ordemServico.setStatus(StatusOrdemServico.ABERTA);
         ordemServico.setDataAbertura(OffsetDateTime.now());
 
-        return ordemServicoRepository.save(ordemServico);
+        return modelMapper.map(ordemServicoRepository.save(ordemServico), OrdemservicoDTO.class);
     }
 
-    public Comentario adicionarComentario(Long ordemServicoId, String descricao) {
+    public ComentarioDTO adicionarComentario(Long ordemServicoId, String descricao) {
 
         Ordemservico ordemServico = ordemServicoRepository.findById(ordemServicoId).orElseThrow(() -> new NegocioException("Ordem de servico não encontrada"));
 
         Comentario comentario = new Comentario(null, descricao, ordemServico, OffsetDateTime.now());
-        comentarioRepository.save(comentario);
-        comentario.setOrdemservico(null);
 
-        return comentario;
+        return modelMapper.map(comentarioRepository.save(comentario), ComentarioDTO.class);
     }
 
     public void finalizar(Long ordemServicoId) {
 
         Ordemservico ordemServico = ordemServicoRepository.findById(ordemServicoId).orElseThrow(() -> new NegocioException("Ordem de servico não encontrada"));
 
-        if(!StatusOrdemServico.ABERTA.equals(ordemServico.getStatus())){
+        if (!StatusOrdemServico.ABERTA.equals(ordemServico.getStatus())) {
             throw new NegocioException("Esta O.S não pode ser finalizada");
         }
-        
+
         ordemServico.setStatus(StatusOrdemServico.FINALIZADA);
         ordemServico.setDataFinalizacao(OffsetDateTime.now());
-        
+
         ordemServicoRepository.save(ordemServico);
-        
+
     }
 
 }
-
-
-
-
