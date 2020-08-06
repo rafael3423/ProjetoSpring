@@ -83,13 +83,16 @@ public class OrdemServicoController {
     }
 
     @GetMapping("/{ordemservicoId}/comentarios")
-    public List<Comentario> listarComentarios(@PathVariable Long ordemservicoId) {
+    public List<ComentarioDTO> listarComentarios(@PathVariable Long ordemservicoId) {
         Ordemservico ordemServico = ordemServicoRepository.findById(ordemservicoId)
                 .orElseThrow(() -> new NegocioException("Ordem de servico não existe."));
 
-        
+        List<ComentarioDTO> comentariosDTO = new ArrayList();
+        ordemServico.getComentarios().forEach((c) -> {
+            comentariosDTO.add(modelMapper.map(c, ComentarioDTO.class));
+        });
 
-        return modelMapper.map(ordemServico.getComentarios(), OrdemservicoDTO.class);
+        return comentariosDTO;
     }
 
     @PutMapping("/{ordemservicoId}/finalizar")
