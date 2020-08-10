@@ -25,7 +25,7 @@ public class Cliente {
     @Size(max = 60)
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "Não")
     @Size(max = 60)
     @Email
     private String email;

@@ -37,7 +37,7 @@ public class JwtToken {
      * @param token
      * @return String
      */
-    public String getUsernameFromToken(String token) {
+    private String getUsernameFromToken(String token) {
 
         String username;
         try {
@@ -56,7 +56,7 @@ public class JwtToken {
      * @param token
      * @return String
      */
-    public Date getExpirationDateFromToken(String token) {
+    private Date getExpirationDateFromToken(String token) {
 
         Date expiration;
         try {
@@ -75,7 +75,7 @@ public class JwtToken {
      * @param token
      * @return String
      */
-    public String refreshToken(String token) {
+    private String refreshToken(String token) {
 
         String refreshedToken;
         try {
@@ -95,7 +95,7 @@ public class JwtToken {
      * @param token
      * @return boolean
      */
-    public boolean tokenValido(String token) {
+    private boolean tokenValido(String token) {
         return !tokenExpirado(token);
     }
 
@@ -105,7 +105,7 @@ public class JwtToken {
      * @param userDetails
      * @return String
      */
-    public String obterToken(UserDetails userDatails) {
+    private String obterToken(UserDetails userDatails) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
@@ -115,5 +115,38 @@ public class JwtToken {
         return gerarToken(claims);
     }
 
+    /**
+     * Realiza o parse do token JWT para extrair as informações contidas no corpo dele
+     *
+     * @param token
+     * @return claims
+     */
+    private Claims getClaimsFromToken(String token) {
+
+        Claims claims;
+        
+        
+        try{
+            claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody;
+        }catch(Exception ex){
+            claims = null;
+        }
+        return claims;
+    }
+
+        /**
+     * Retorna a data de expiração com base na data atual
+     *
+     * 
+     * @return Date
+     */
+    private Date gerarDataExpiracao() {
+        return new Date(System.currentTimeMillis() + expiration * 1000);
+    }
+    
 }
+
+
+
+
 
