@@ -1,18 +1,8 @@
 
 package com.example.demo2.domain.dto;
 
-import com.example.demo2.domain.model.*;
-import com.example.demo2.domain.ValidationGroup;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Objects;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClienteDTO {
@@ -89,6 +79,7 @@ public class ClienteDTO {
 
     }
 }
+
 
 
 

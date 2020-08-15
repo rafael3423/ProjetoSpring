@@ -68,9 +68,9 @@
 
 <!-- AUTENTICAÇÃO JWT        -->
         <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-            <version>3.10.3</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
         </dependency>
  
         <!-- CONVERSOR MODEL -> DTO -->
@@ -96,7 +96,13 @@
                     <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>  
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.10.3</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -109,3 +115,6 @@
     </build>
 
 </project>
+
+
+

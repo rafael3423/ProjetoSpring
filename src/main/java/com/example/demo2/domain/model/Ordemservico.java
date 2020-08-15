@@ -14,9 +14,11 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,7 +53,7 @@ public class Ordemservico {
     @Size(max = 60)
     private String descricao;
 
-    @NotNull   
+    @NotNull
     private BigDecimal preco;
 
     @JsonProperty(access = Access.READ_ONLY)
@@ -63,9 +65,8 @@ public class Ordemservico {
 
     @JsonProperty(access = Access.READ_ONLY)
     private OffsetDateTime dataFinalizacao;
-    
-    @JsonInclude(JsonInclude.Include.NON_ABSENT)
-    @OneToMany(mappedBy = "ordemservico")
+
+    @OneToMany(mappedBy = "ordemservico", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comentario> comentarios = new ArrayList();
 
     public Ordemservico(Long id, Cliente cliente, String descricao, BigDecimal preco, StatusOrdemServico status, OffsetDateTime dataAbertura, OffsetDateTime dataFinalizacao) {
@@ -144,8 +145,6 @@ public class Ordemservico {
     public void setComentarios(List<Comentario> comentarios) {
         this.comentarios = comentarios;
     }
-    
-    
 
     @Override
     public int hashCode() {
@@ -172,16 +171,6 @@ public class Ordemservico {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 

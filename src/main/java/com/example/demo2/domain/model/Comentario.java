@@ -10,10 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.criteria.Fetch;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -27,14 +29,14 @@ public class Comentario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Ordemservico ordemservico;
-    
+
     @NotBlank
     private String descricao;
-    
+
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private OffsetDateTime dataEnvio;
 
@@ -106,11 +108,6 @@ public class Comentario {
     }
 
 }
-
-
-
-
-
 
 
 

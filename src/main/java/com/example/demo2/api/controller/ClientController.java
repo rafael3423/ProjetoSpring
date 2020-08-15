@@ -7,7 +7,6 @@ import com.example.demo2.domain.repository.ClienteRepository;
 import com.example.demo2.domain.service.CadastroCliente;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,3 +93,4 @@ public class ClientController {
     }
 
 }
+

@@ -13,8 +13,6 @@ public class Erros {
     private OffsetDateTime hora;
     private List<CamposDoErro> campos;
 
-
-
     public Erros() {
     }
 
@@ -58,6 +56,7 @@ public class Erros {
     }
 
 }
+
 
 
 
