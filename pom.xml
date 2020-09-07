@@ -26,14 +26,14 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
        
-       <!-- POOL DE CONECTION -->
+        <!-- POOL DE CONECTION -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.3.1</version>
         </dependency>
        
-       <!-- SPRING -->
+        <!-- SPRING -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -44,6 +44,14 @@
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
+        
+        <!-- CACHE -->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>2.10.6</version>
+        </dependency>
+
         
         <!-- VALIDATION -->
         <dependency>
@@ -66,7 +74,7 @@
             <scope>runtime</scope>
         </dependency>
 
-<!-- AUTENTICAÇÃO JWT        -->
+        <!-- AUTENTICAÇÃO JWT        -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
@@ -115,6 +123,10 @@
     </build>
 
 </project>
+
+
+
+
 
 
 

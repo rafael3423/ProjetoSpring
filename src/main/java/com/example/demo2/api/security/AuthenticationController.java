@@ -8,12 +8,15 @@ package com.example.demo2.api.security;
 import com.example.demo2.api.security.jwt.JwtAuthenticationDto;
 import com.example.demo2.api.security.jwt.JwtToken;
 import com.example.demo2.api.security.jwt.TokenDto;
+import com.example.demo2.api.security.user.Usuario;
+import com.example.demo2.api.security.user.UsuarioRepository;
+import com.example.demo2.api.utils.SenhaUtils;
 import com.example.demo2.domain.exception.NegocioException;
 import java.util.Optional;
-import org.springframework.security.authentication.AuthenticationManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,10 +40,14 @@ public class AuthenticationController {
     private static final String TOKEN_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer";
 
+    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtToken jwtToken;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -48,6 +55,13 @@ public class AuthenticationController {
     @PostMapping()
     public TokenDto gerarTokenJwt(@Valid @RequestBody JwtAuthenticationDto authenticationDto) {
         try {
+
+            Usuario usuario = usuarioRepository.findById(1L).orElseThrow(() -> new NegocioException("Usuario não encontrado."));
+            usuario.setSenha(SenhaUtils.gerarBCrypt(authenticationDto.getSenha()));
+            usuarioRepository.save(usuario);
+
+     
+
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(), authenticationDto.getSenha()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,15 +91,9 @@ public class AuthenticationController {
         }
 
         String refreshedToken = jwtToken.refreshToken(token.get());
-        
+
         return new TokenDto(refreshedToken);
     }
 }
-
-
-
-
-
-
 
 

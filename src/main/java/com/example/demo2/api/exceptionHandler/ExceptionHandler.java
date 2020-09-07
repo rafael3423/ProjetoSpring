@@ -1,5 +1,6 @@
 package com.example.demo2.api.exceptionHandler;
 
+import com.example.demo2.domain.exception.AcessoNegadoException;
 import com.example.demo2.domain.exception.NegocioException;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -33,6 +34,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, erros, new HttpHeaders(), status, request);
     }
+    
+    @org.springframework.web.bind.annotation.ExceptionHandler(AcessoNegadoException.class)
+        public ResponseEntity<Object> handleAcesso(AcessoNegadoException ex, WebRequest request) {
+
+        var status = HttpStatus.UNAUTHORIZED;
+        
+        var erros = new Erros(ex.getMessage(), status.value(), OffsetDateTime.now(), null);
+
+        return handleExceptionInternal(ex, erros, new HttpHeaders(), status, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -41,8 +52,6 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 
         ex.getBindingResult().getAllErrors().forEach((error) -> {
             campos.add(new CamposDoErro(error.getDefaultMessage(), ((FieldError) error).getField()));
-//            campos.add(new CamposDoErro(messageSource.getMessage(error, LocaleContextHolder.getLocale()), ((FieldError)error).getField())); >> caso quiser usar com frases criadas no message.properties.
-
         });
 
         Erros erros = new Erros("Um ou mais campos preenchidos incorretamente!.",
@@ -54,3 +63,6 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
 }
+
+
+
