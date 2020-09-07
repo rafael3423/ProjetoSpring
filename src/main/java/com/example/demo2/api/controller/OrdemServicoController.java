@@ -18,6 +18,7 @@ import javax.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,6 +48,7 @@ public class OrdemServicoController {
     private OrdemServicoRepository ordemServicoRepository;
 
     @PostMapping()
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public OrdemservicoDTO criar(@Valid @RequestBody Ordemservico ordemServico) {
 
@@ -75,6 +77,7 @@ public class OrdemServicoController {
         return modelMapper.map(ordemServico, OrdemservicoDTO.class);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/{ordemservicoId}/comentarios")
     @ResponseStatus(HttpStatus.CREATED)
     public ComentarioDTO comentar(@PathVariable Long ordemservicoId, @Valid @RequestBody Comentario comentarioInput) {
@@ -103,3 +106,4 @@ public class OrdemServicoController {
 
     }
 }
+
