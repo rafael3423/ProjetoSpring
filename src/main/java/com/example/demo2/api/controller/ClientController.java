@@ -43,7 +43,8 @@ public class ClientController {
     String cu(){
         return "cu";
     }
-    
+   
+  
     @GetMapping()
     public List<ClienteDTO> listar() {
         try {
@@ -75,7 +76,7 @@ public class ClientController {
         }
 
     }
-
+    
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteDTO adicionar(@Valid @RequestBody Cliente cliente) {
@@ -106,6 +107,8 @@ public class ClientController {
     }
 
 }
+
+
 
 
 

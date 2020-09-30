@@ -10,19 +10,26 @@ import com.example.demo2.api.security.jwt.JwtToken;
 import com.example.demo2.api.security.jwt.TokenDto;
 import com.example.demo2.api.security.user.Usuario;
 import com.example.demo2.api.security.user.UsuarioRepository;
+import com.example.demo2.api.security.user.UsuarioService;
 import com.example.demo2.api.utils.SenhaUtils;
 import com.example.demo2.domain.exception.NegocioException;
+import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,20 +54,20 @@ public class AuthenticationController {
     private JwtToken jwtToken;
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private UserDetailsService userDetailsService;
 
     @PostMapping()
     public TokenDto gerarTokenJwt(@Valid @RequestBody JwtAuthenticationDto authenticationDto) {
-        try {
 
             Usuario usuario = usuarioRepository.findById(1L).orElseThrow(() -> new NegocioException("Usuario não encontrado."));
             usuario.setSenha(SenhaUtils.gerarBCrypt(authenticationDto.getSenha()));
             usuarioRepository.save(usuario);
-
-     
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(authenticationDto.getEmail(), authenticationDto.getSenha()));
@@ -70,10 +77,26 @@ public class AuthenticationController {
             String token = jwtToken.obterToken(userDetails);
             return new TokenDto(token);
 
-        } catch (Exception ex) {
-            throw new NegocioException("Erro validadndo lançamento.");
-        }
+    
 
+    }
+
+    @PostMapping("/cadastrarUsuario")
+    public ResponseEntity<Void> criarUsuario(@Valid @RequestBody Usuario usuario) {
+        Usuario user = usuarioRepository.findByEmail(usuario.getEmail());
+        if (user == null) {
+            usuarioService.cadastrarUsuario(usuario);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            throw new NegocioException("Usuario já existente.");
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @GetMapping("/listarUsuarios")
+    public List<Usuario> listarUsuarios() {
+        
+        return usuarioRepository.findAll();
     }
 
     @PostMapping("/refresh")
@@ -95,5 +118,12 @@ public class AuthenticationController {
         return new TokenDto(refreshedToken);
     }
 }
+
+
+
+
+
+
+
 
 
