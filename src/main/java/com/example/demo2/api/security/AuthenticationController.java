@@ -76,9 +76,6 @@ public class AuthenticationController {
             UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationDto.getEmail());
             String token = jwtToken.obterToken(userDetails);
             return new TokenDto(token);
-
-    
-
     }
 
     @PostMapping("/cadastrarUsuario")
@@ -118,12 +115,5 @@ public class AuthenticationController {
         return new TokenDto(refreshedToken);
     }
 }
-
-
-
-
-
-
-
 
 

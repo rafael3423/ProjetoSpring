@@ -37,13 +37,6 @@ public class ClientController {
 
     @Autowired
     private CadastroCliente cadastroCliente;
-
-    
-    @GetMapping("/cu")
-    String cu(){
-        return "cu";
-    }
-   
   
     @GetMapping()
     public List<ClienteDTO> listar() {
@@ -107,6 +100,7 @@ public class ClientController {
     }
 
 }
+
 
 
 
