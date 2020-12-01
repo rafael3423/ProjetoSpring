@@ -87,7 +87,7 @@ public class ClientController {
         return ResponseEntity.ok(cadastroCliente.salvar(cliente));
     }
 
-    @DeleteMapping("/{clienteId}")
+    @DeleteMapping("/{clienteId}")//SFasfasfasdasd
     public ResponseEntity<Void> deletar(@PathVariable Long clienteId) {
 
         if (!clienteRepository.existsById(clienteId)) {
@@ -100,10 +100,3 @@ public class ClientController {
     }
 
 }
-
-
-
-
-
-
-

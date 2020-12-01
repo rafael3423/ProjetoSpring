@@ -10,12 +10,14 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>demo2</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <name>demo2</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>8</java.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <dependencies>
@@ -127,6 +129,7 @@
     </dependencies>
 
     <build>
+        
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -137,7 +140,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.11</version>
                 <configuration>
-                    <imageName>demo2</imageName>
+                    <imageName>docker.io/rafael3423/projeto_spring</imageName>
                     <imageTags>
                         <imageTag>${project.version}</imageTag>
                         <imageTag>latest</imageTag>
@@ -157,6 +160,11 @@
                     </exposes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+
         </plugins>
     </build>
 
