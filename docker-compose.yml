@@ -1,30 +1,34 @@
 version: '3'
-services:  						     
-    nginx:                                                    							
-        build:								
-            dockerfile: ./docker/nginx.dockerfile		
-            context: .						
-        image: douglasq/nginx					
-        container_name: nginx					
+services:
+    nginx:
+        build:
+            dockerfile: ./docker/nginx.dockerfile
+            context: .
+        image: douglasq/nginx
+        container_name: nginx
         ports:
-            - "80:80"						
+            - "80:80"
+        volumes:
+            - ./var:/var
         networks:
-            - production-network				
-        depends_on: 						
+            - production-network
+        depends_on:
             - "spring1"
             - "spring2"
     mysql:
         image: mysql
         networks:
             - production-network
-    environment:
-        MYSQL_PASSWORD: 3j3b4ig4
+        environment:
+            MYSQL_ROOT_PASSWORD: 3j3b4ig4
         
     spring1:
         image: docker.io/rafael3423/projeto_spring
         container_name: spring1
         ports:
             - "8081:8081"
+        volumes:
+            - ./var:/var
         networks:
             - production-network
         depends_on:
@@ -34,10 +38,15 @@ services:
         container_name: spring2
         ports:
             - "8082:8081"
+        volumes:
+            - ./var:/var 
         networks:
             - production-network
         depends_on:
             - "mysql"
-networks: 			
-    production-network:		
-        driver: bridge		
+networks:
+    production-network:
+        driver: bridge
+
+
+
