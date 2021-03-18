@@ -1,6 +1,6 @@
 FROM nginx:latest
 MAINTAINER Rafael Marcos
-COPY /docker/config/nginx.conf /etc/nginx/nginx.conf
+COPY ./config /etc/nginx
 EXPOSE 80 443
 ENTRYPOINT ["nginx"]
 # Parametros extras para o entrypoint

@@ -9,7 +9,8 @@ services:
         ports:
             - "80:80"
         volumes:
-            - ./var:/var
+            - /etc/nginx:/etc/nginx/:ro
+            - /etc/nginx/logs.d:/var/log/nginx
         networks:
             - production-network
         depends_on:
@@ -20,7 +21,8 @@ services:
         networks:
             - production-network
         environment:
-            MYSQL_ROOT_PASSWORD: 3j3b4ig4
+            MYSQL_ROOT_PASSWORD: "3j3b4ig4"
+            MYSQL_DATABASE: "root"
         
     spring1:
         image: docker.io/rafael3423/projeto_spring
