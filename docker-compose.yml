@@ -44,6 +44,21 @@ services:
             - production-network
         depends_on:
             - "mysql"
+    rabbitmq:
+        image: rabbitmq:3-management
+        command: ['rabbitmq-server', '--hostname', 'localhost', '--name', 'integracao']
+        restart: always
+        ports:
+            - '5672:5672'
+            - '8082:15672'
+        volumes:
+            - ./var/rabbitmq/plugins:/tmp   
+            - ./var/rabbitmq:/var/lib/rabbitmq
+            - /etc/localtime:/etc/locatime:ro
+            - /etc/timezone:/etc/timezone:ro
+        environment:
+            RABBITMQ_DEFAULT_USER: rabbitmq
+            RABBITMQ_DEFAULT_PASS: 3j3b4ig4
 networks:
     production-network:
         driver: bridge

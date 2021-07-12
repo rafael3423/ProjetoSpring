@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+ <html>
+
+<head>
+
+<title>CRUD Aluno</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<style>
+
+    table, th, td {
+
+      border: 1px solid black;
+
+      border-collapse: collapse;
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<a href="insert">Inserir novo</a> | <a href="read">Ver todos</a> <br> <br>
+
+<table style="width:100%">
+
+<tr>
+
+    <th>ID</td>
+
+    <th>Nome</td>
+
+    <th>E-mail</td>
+
+    <th>Faculdade</td>
+
+    <th>Excluir?</td>
+
+    <th>Alterar?</td>
+
+</tr>
+
+<tr th:each="cliente : ${clientes}">
+
+    <td th:text="${cliente.id}"></td>
+
+    <td th:text="${cliente.name}"></td>
+
+    <td th:text="${cliente.email}"></td>
+
+    <td><a th:href="@{/delete(id=${cliente.id})}">Deletar</a></td>
+
+    <td><a th:href="@{/update(id=${cliente.id})}">Alterar</a></td>
+
+</tr>
+
+</table>
+
+</body>
+
+</html>

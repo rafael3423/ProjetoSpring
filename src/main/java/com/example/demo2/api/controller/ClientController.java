@@ -6,6 +6,7 @@ import com.example.demo2.domain.exception.NegocioException;
 import com.example.demo2.domain.model.Cliente;
 import com.example.demo2.domain.repository.ClienteRepository;
 import com.example.demo2.domain.service.CadastroCliente;
+import com.example.demo2.domain.tasks.TestTask;
 import java.util.ArrayList;
 import java.util.List;
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("clientes")
@@ -37,22 +39,34 @@ public class ClientController {
 
     @Autowired
     private CadastroCliente cadastroCliente;
+    
+    @Autowired
+    private TestTask testTask;
   
     @GetMapping()
-    public List<ClienteDTO> listar() {
-        try {
-            List<Cliente> clientes = clienteRepository.findAll();
-            List<ClienteDTO> clientesDTO = new ArrayList();
+    public ModelAndView listar() {
+//        try {
+//            List<Cliente> clientes = clienteRepository.findAll();
+//            List<ClienteDTO> clientesDTO = new ArrayList();
+//
+//            clientes.forEach((c) -> {
+//                ClienteDTO clienteDTO = modelMapper.map(c, ClienteDTO.class);
+//                clientesDTO.add(clienteDTO);
+//            });
+//
+//            return clientesDTO;
+//        } catch (Exception ex) {
+//            throw new AcessoNegadoException("Não autorizado");
+//        }
+        
+        List<Cliente> clientes = clienteRepository.findAll();
 
-            clientes.forEach((c) -> {
-                ClienteDTO clienteDTO = modelMapper.map(c, ClienteDTO.class);
-                clientesDTO.add(clienteDTO);
-            });
+        ModelAndView mav = new ModelAndView("clientes");
+        mav.addObject("clientes", clientes);
+        testTask.testarTaskSend(clientes.get(0));
+        return mav;
 
-            return clientesDTO;
-        } catch (Exception ex) {
-            throw new AcessoNegadoException("Não autorizado");
-        }
+
     }
 
     @GetMapping("/{clienteId}")
