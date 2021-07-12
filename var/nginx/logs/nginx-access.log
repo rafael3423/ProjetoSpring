@@ -1,0 +1,4 @@
+- - - [time_local] "POST /clientes HTTP/1.1" 400 88 "-" "http_user_agent" "-"
+- - - [time_local] "POST /clientes HTTP/1.1" 400 88 "-" "http_user_agent" "-"
+- - - [time_local] "GET /clientes HTTP/1.1" 200 87 "-" "http_user_agent" "-"
+- - - [time_local] "GET /favicon.ico HTTP/1.1" 404 556 "http://127.0.0.1:8000/clientes" "http_user_agent" "-"

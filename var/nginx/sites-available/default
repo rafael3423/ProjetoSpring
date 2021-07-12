@@ -1,0 +1,28 @@
+upstream springs {
+        server spring1:8081;
+        server spring2:8081;
+}
+
+server {
+        listen 80;
+
+        server_name localhost;
+
+        root   /usr/share/nginx/html;
+	access_log /var/log/nginx/access.log main;
+	
+        location /clientes { 
+                  proxy_pass http://springs;     #chama o upstream para o load balancer
+                  proxy_http_version    1.1;
+                  proxy_set_header      Upgrade $http_upgrade;
+                  proxy_set_header      Connection 'upgrade';
+                  proxy_set_header      Host $host;
+                  proxy_set_header      X-Real-IP            $remote_addr; #passa o id de quem chama o nginx
+                  proxy_set_header      X-Forwarded-For  $proxy_add_x_forwarded_for;
+                  proxy_set_header      X-NginX-Proxy    true;
+                  proxy_cache_bypass    $http_upgrade;
+        }
+
+
+}
+
