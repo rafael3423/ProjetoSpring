@@ -201,3 +201,4 @@
 2021/05/12 02:30:54 [notice] 67#67: signal process started
 2021/05/12 02:43:53 [error] 68#68: *23 connect() failed (113: No route to host) while connecting to upstream, client: 172.18.0.1, server: localhost, request: "POST /clientes HTTP/1.1", upstream: "http://172.18.0.3:8080/clientes", host: "127.0.0.1:8000"
 2021/05/12 02:44:09 [error] 68#68: *23 connect() failed (113: No route to host) while connecting to upstream, client: 172.18.0.1, server: localhost, request: "POST /clientes HTTP/1.1", upstream: "http://172.18.0.3:8080/clientes", host: "127.0.0.1:8000"
+2021/07/13 12:46:14 [error] 21#21: *1 open() "/usr/share/nginx/html/favicon.ico" failed (2: No such file or directory), client: 172.18.0.1, server: localhost, request: "GET /favicon.ico HTTP/1.1", host: "localhost:8000", referrer: "http://localhost:8000/clientes"
