@@ -80,7 +80,8 @@ public class AmqpConfig implements MessagePostProcessor {
     public ConnectionFactory connectionFactory() throws Exception {
         LOG.info("Configuring AMQP connection factory");
 
-        String host = "rabbitmq";
+        String host = "localhost";
+//        String host = "rabbitmq";
 
         int port = DEFAULT_PORT;
         try {
